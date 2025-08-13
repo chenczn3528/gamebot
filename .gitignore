@@ -1,0 +1,29 @@
+# 忽略 node_modules
+node_modules/
+
+# 忽略日志文件
+*.log
+
+# 忽略 .env 环境变量文件
+.env
+
+# 忽略编译输出（例如 Vite、Next.js、React 项目等）
+dist/
+build/
+
+# 忽略本地配置文件
+.vscode/
+*.DS_Store
+
+# 忽略缓存
+*.cache
+.idea/
+.ipynb_checkpoints/
+__pycache__/
+__init__.py
+
+
+
+/test.air/
+/picture.air/
+
