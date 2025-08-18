@@ -19,7 +19,8 @@ for i in range(4):
 
         login()
 
-    task(first_time=False)
+    task()
+    # week()
 
     end_time = time.time()
     elapsed_minutes = (end_time - start_time) / 60

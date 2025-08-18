@@ -95,20 +95,17 @@ def explore():
         return_home()
 
 
-def task(first_time: bool = True):
+def task():
     """每日任务"""
     print("----------- task -----------")
     return_home()
-
-    if first_time:
-        store(week=False) # 商店购买
-        daily_check()  # 每日签到
-        get_friend_energy() # 领好友体力
+    store() # 商店购买
+    daily_check()  # 每日签到
+    get_friend_energy() # 领好友体力
     get_energy()    # 领早晚体力
     explore()   # 星际探测
-    use_energy(first_time)
+    use_energy()
     get_daily_reward()
-    # 主界面互动
 
 
 def get_daily_reward():
@@ -121,7 +118,7 @@ def get_daily_reward():
     return_home()
 
 
-def store(week=False):
+def store():
     """商店购买"""
     print("----------- store -----------")
     return_home()
@@ -131,24 +128,20 @@ def store(week=False):
     if exists_pic("images/daily/free_day.png", threshold=0.95, log="判断每日礼包有没有领到"):
         touch_pic("images/daily/free_day.png", threshold=0.95, log="点击礼包")
         touch_pos((560, 1385), log="点击购买")
-    if week and exists_pic("images/daily/free_week.png", threshold=0.95, log="判断每周礼包有没有领到"):
-        touch_pic("images/daily/free_week.png", threshold=0.95, log="点击礼包")
-        touch_pos((560, 1385), log="点击购买")
     return_home()
 
 
-def use_energy(first_time: bool = True):
+def use_energy():
     """刷材料的规划，需要收藏两张卡，一张用来升级一次卡面，另一张用来刷完体力，也可以都是第一张，第二张主要是升级不了的话备选"""
     print("----------- use_energy -----------")
     isUpgrade = True
     has_energy = True
     has_energy_first_time = False
     wait_pic("images/login/main.png", log="确认目前在主界面")
-    if first_time:  # 第一次收体力，需要完成日常任务-升级一次
-        touch_pos((530, 1785), sleep_time=5, log="点击作战")
-        touch_pos((390, 490), sleep_time=10, log="点击零点追踪")
-        touch_pos((330, 660), sleep_time=5, log="点击哈特")
-        has_energy_first_time = __material__(multiple=False)    # 刷一次瓶子，完成后回到主界面
+    touch_pos((530, 1785), sleep_time=5, log="点击作战")
+    touch_pos((390, 490), sleep_time=10, log="点击零点追踪")
+    touch_pos((330, 660), sleep_time=5, log="点击哈特")
+    has_energy_first_time = __material__(multiple=False)    # 刷一次瓶子，完成后回到主界面
     touch_pos((680, 1785), sleep_time=5, log="点击思念")
     touch_pos((280, 700), sleep_time=10, log="点击第一张卡")
     if not exists_pic("images/fight/show_info.png", log="判断卡面信息是否被点掉了"):
@@ -295,3 +288,121 @@ def __detect_color__(
             if is_similar_color(pixels[x, y][:3], target_color, tolerance):
                 return True
     return False
+
+
+def store_week():
+    print("----------- store week -----------")
+    return_home()
+    touch_pos((1000, 1420), log="点击商店")
+    touch_pos((375, 320), log="点击礼包")
+    swipe_pos((1010, 1635), (1010, 550), duration=0.3, log="下滑到免费礼包")
+    if exists_pic("images/week/free_week.png", threshold=0.95, log="判断每周礼包有没有领到"):
+        touch_pic("images/week/free_week.png", threshold=0.95, log="点击礼包")
+        touch_pos((560, 1385), log="点击购买")
+        back()
+    touch_pos((900, 320), log="点击兑换")
+    touch_pic("images/week/happy_store.png", threshold=0.8, log="点击快乐小铺")
+    if exists_pic("images/week/wish_ticket.png", threshold=0.9, log="判断是否有许愿券"):
+        touch_pic("images/week/wish_ticket.png", threshold=0.9, log="点击许愿券")
+        touch_pos((550, 1155), log="点击购买")
+        back()
+    if exists_pic("images/week/magnet.png", threshold=0.9, log="判断是否有磁铁"):
+        touch_pic("images/week/magnet.png", threshold=0.9, log="点击磁铁")
+        touch_pos((860, 1060), log="点击数量2")
+        touch_pos((550, 1250), log="点击购买")
+        back()
+    if exists_pic("images/week/money.png", threshold=0.9, log="判断是否有金币"):
+        touch_pic("images/week/money.png", threshold=0.9, log="点击金币")
+        touch_pos((550, 1155), log="点击购买")
+        back()
+    return_home()
+
+
+def game():
+    print("----------- game -----------")
+    character_list = [(370, 370), (700, 710), (370, 1055), (740, 1330), (370, 1600)]
+    return_home()
+    touch_pos((355, 1785), log="点击约会")
+    for i in range(len(character_list)):
+        touch_pos((340, 940), log="点击快乐出游")
+        touch_pos(character_list[i], sleep_time=2, log=f"点击第{i+1}个男主")
+        for j in range(3):
+            touch_pos((715, 640), log="点击娃娃机")
+            touch_pos((560, 1680), log="点击出发")
+            wait_pic("images/week/game_return.png", log="等待返回键")
+            back()
+            touch_pos((720, 1000), log="点击确认返回")
+            while True:
+                if exists_pic("images/week/game_miaomiao.png", threshold=0.9, log="判断是否在娃娃机、喵喵牌界面"):
+                    break
+                else:
+                    back(sleep_time=1)
+        for j in range(3):
+            touch_pos((340, 1150), log="点击喵喵牌")
+            touch_pos((830, 1630), log="点击出发")
+            wait_pic("images/week/game_return1.png", log="等待返回键")
+            back()
+            touch_pos((720, 1000), log="点击确认返回")
+            while True:
+                if exists_pic("images/week/game_miaomiao.png", threshold=0.9, log="判断是否在娃娃机、喵喵牌界面"):
+                    break
+                else:
+                    back(sleep_time=1)
+        back()
+    return_home()
+
+
+def photo():
+    print("----------- photo -----------")
+    return_home()
+    touch_pos((355, 1785), log="点击约会")
+    touch_pos((335, 1300), log="点击拍照")
+    touch_pos((370, 380), sleep_time=3, log="点击人物")
+    touch_pos((715, 630), log="点击大头贴")
+    wait_pic("images/week/photo_next.png", log="等待下一步按钮")
+    touch_pic("images/week/photo_next.png", log="点击下一步按钮")
+    touch_pos((780, 1645), sleep_time=2, log="点击准备好了")
+    touch_pos((535, 1030), log="点击拍照")
+    back()
+    touch_pos((800, 990), log="点击确定退出拍照")
+    wait_pic("images/week/photo_logo.png", log="等待写真logo出现")
+    touch_pic("images/week/photo_logo.png", log="点击写真logo")
+    wait_pic("images/week/photo_env.png", log="等待写真界面出现")
+    touch_pos((980, 1140), log="点击拍照")
+    return_home()
+
+
+def book():
+    print("----------- book -----------")
+    return_home()
+    touch_pos((355, 1785), log="点击约会")
+    touch_pos((340, 610), log="点击手账")
+    touch_pos((595, 880), log="点击本子")
+    touch_pos((705, 1510), log="编辑内页")
+    touch_pos((625, 1730), log="点击贴纸")
+    touch_pos((235, 1580), log="点击第一个贴纸")
+    touch_pos((1030, 1360), log="点击√")
+    touch_pos((980, 120), log="点击保存")
+    touch_pos((735, 1000), log="点击确定保存")
+    return_home()
+
+
+def get_week_reward():
+    """领取任务奖励"""
+    print("----------- get_week_reward -----------")
+    return_home()
+    touch_pos((1000, 985), log="点击日程")
+    touch_pos((550, 255), log="点击每周")
+    touch_pos((840, 1700), log="点击一键领取（完成任务）")
+    touch_pos((840, 1700), log="点击一键领取（领奖励）")
+    return_home()
+
+
+def week():
+    print("----------- week -----------")
+    return_home()
+    photo()
+    game()
+    book()
+    store_week()
+    get_week_reward()
